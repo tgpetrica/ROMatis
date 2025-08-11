@@ -21,7 +21,6 @@ jobs:
           for f in notams/*.txt; do
             ICAO=$(basename "$f" .txt)
             TXT=$(sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' "$f")
-            # expose as GITHUB_OUTPUT key like LROP, LRBS, ...
             echo "${ICAO}=${TXT}" >> $GITHUB_OUTPUT
           done
 
@@ -33,10 +32,8 @@ jobs:
           cp "$SRC" "$OUT"
           for f in notams/*.txt; do
             ICAO=$(basename "$f" .txt)
-            KEY="steps.notams.outputs.${ICAO}"
-            VAL="${!KEY}"
-            # Replace token e.g. %%LROP_NOTAMS%%
-            sed -i "s/%%${ICAO}_NOTAMS%%/${VAL//\//\\/}/g" "$OUT"
+            VAL=$(perl -0777 -pe 's/([\/&\\])/\\$1/g; s/\R/\\n/g' "$f")
+            sed -i "s/%%${ICAO}_NOTAMS%%/${VAL}/g" "$OUT"
           done
 
       - name: Bump updateSerial

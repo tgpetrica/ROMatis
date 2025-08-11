@@ -1,0 +1,61 @@
+name: Build ROMatis
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "profiles/ROMatis.base.json"
+      - "notams/*.txt"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Load NOTAMs into env
+        id: notams
+        shell: bash
+        run: |
+          for f in notams/*.txt; do
+            ICAO=$(basename "$f" .txt)
+            TXT=$(sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' "$f")
+            # expose as GITHUB_OUTPUT key like LROP, LRBS, ...
+            echo "${ICAO}=${TXT}" >> $GITHUB_OUTPUT
+          done
+
+      - name: Inject NOTAM tokens
+        shell: bash
+        run: |
+          SRC=profiles/ROMatis.base.json
+          OUT=profiles/ROMatis.json
+          cp "$SRC" "$OUT"
+          for f in notams/*.txt; do
+            ICAO=$(basename "$f" .txt)
+            KEY="steps.notams.outputs.${ICAO}"
+            VAL="${!KEY}"
+            # Replace token e.g. %%LROP_NOTAMS%%
+            sed -i "s/%%${ICAO}_NOTAMS%%/${VAL//\//\\/}/g" "$OUT"
+          done
+
+      - name: Bump updateSerial
+        shell: bash
+        run: |
+          TODAY=$(date +%Y%m%d)
+          TMP=$(mktemp)
+          OLD=$(jq -r '.updateSerial // 0' profiles/ROMatis.json)
+          OLD_DATE=${OLD:0:8}; OLD_CTR=${OLD:8:2}
+          if [[ "$OLD_DATE" == "$TODAY" ]]; then CTR=$(printf "%02d" $((10#$OLD_CTR + 1))); else CTR="01"; fi
+          NEW="${TODAY}${CTR}"
+          jq --argjson v "$NEW" '.updateSerial = $v' profiles/ROMatis.json > "$TMP" && mv "$TMP" profiles/ROMatis.json
+
+      - name: Commit build
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions"
+            git config user.email "actions@users.noreply.github.com"
+            git add profiles/ROMatis.json
+            git commit -m "build: ROMatis with NOTAMs + serial bump"
+            git push
+          fi

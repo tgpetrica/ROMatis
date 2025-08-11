@@ -3870,7 +3870,7 @@
           "id": "debb1862-ccb4-4610-87c4-1b69f273264c",
           "ordinal": 0,
           "name": "MIXED: 07 DEP & ARR",
-          "notams": "AFTER LANDING ON RWY 07, TAXIING TO THE TERMINAL VIA TWY D.",
+          "notams": "",
           "template": "[FACILITY] ATIS information [ID] [TIME]. Expect ILS DME approach runway 07 in use. Transition level [TL], [NOTAMS]. Wind [WIND], [VIS], [PRESENT_WX], [CLOUDS], temperature [TEMP], dew point [DEW], [PRESSURE]. This was [FACILITY] ATIS information [ID].",
           "externalGenerator": {
             "enabled": false,
@@ -3886,7 +3886,7 @@
           "id": "3f622f39-dda4-47ca-8259-ba1774e42b1b",
           "ordinal": 1,
           "name": "MIXED: 25 DEP & ARR",
-          "notams": "AFTER LANDING ON RWY 07, TAXIING TO THE TERMINAL VIA TWY D.",
+          "notams": "",
           "template": "[FACILITY] ATIS information [ID] [TIME]. Expect ILS DME approach runway 25 in use. Transition level [TL], [NOTAMS]. Wind [WIND], [VIS], [PRESENT_WX], [CLOUDS], temperature [TEMP], dew point [DEW], [PRESSURE]. This was [FACILITY] ATIS information [ID].",
           "externalGenerator": {
             "enabled": false,

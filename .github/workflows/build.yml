@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - "profiles/ROMatis.base.json"
+      - "vATIS Profile - ROMatis.base.json"
       - "notams/*.txt"
 
 jobs:

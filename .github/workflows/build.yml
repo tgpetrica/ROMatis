@@ -62,7 +62,7 @@ jobs:
           NEW="${TODAY}${CTR}"
           echo "Next updateSerial:   $NEW"
           TMP=$(mktemp)
-          jq --arg v "$NEW" '.updateSerial = $v' "$OUT" > "$TMP" && mv "$TMP" "$OUT"
+          jq --argjson v "$NEW" '.updateSerial = $v' "$OUT" > "$TMP" && mv "$TMP" "$OUT"
           jq -r '.updateSerial' "$OUT"
 
       - name: Commit build

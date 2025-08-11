@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           OUT=profiles/ROMatis.json
           TODAY=$(date -u +%Y%m%d)
-          OLD=$(jq -r '(.updateSerial|tostring)? // "0"' "$OUT")
+          OLD=$(jq -r '.updateSerial' "$OUT" 2>/dev/null || echo "0")
           echo "Current updateSerial: $OLD"
 
           OLD_DATE=${OLD:0:8}
@@ -63,7 +63,6 @@ jobs:
           echo "Next updateSerial:   $NEW"
           TMP=$(mktemp)
           jq --argjson v "$NEW" '.updateSerial = $v' "$OUT" > "$TMP" && mv "$TMP" "$OUT"
-          jq -r '.updateSerial' "$OUT"
 
       - name: Commit build
         run: |

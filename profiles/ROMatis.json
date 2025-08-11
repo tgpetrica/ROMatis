@@ -2,7 +2,7 @@
   "name": "ROMatis",
   "id": "ea377aab-8f2e-4e77-9c24-882a8665fb31",
   "updateUrl": "https://raw.githubusercontent.com/tgpetrica/ROMatis/main/profiles/ROMatis.json",
-  "updateSerial": 2025081107,
+  "updateSerial": 2025081101,
   "stations": [
     {
       "id": "95187787-68f5-4a99-a4b9-9b9695286a96",
@@ -3870,7 +3870,7 @@
           "id": "debb1862-ccb4-4610-87c4-1b69f273264c",
           "ordinal": 0,
           "name": "MIXED: 07 DEP & ARR",
-          "notams": "PILOTS MUST NOT ENTER ON TWY A WITHOUT BEING CLEARED BY ATC. ALL CONVENTIONAL SID AND STAR PROCEDURES ARE SUSPENDED. NON PRNAV AIRCRAFT WILL BE VECTORED.",
+          "notams": "PILOTS MUST NOT ENTER ON TWY A WITHOUT BEING CLEARED BY ATC. ALL CONVENTIONAL SID AND STAR PROCEDURES ARE SUSPENDED. NON PRNAV AIRCRAFT WILL BE VECTORED..",
           "template": "[FACILITY] ATIS information [ID] [TIME]. Expect ILS DME approach runway 07 in use. Transition level [TL], [NOTAMS]. Wind [WIND], [VIS], [PRESENT_WX], [CLOUDS], temperature [TEMP], dew point [DEW], [PRESSURE]. This was [FACILITY] ATIS information [ID].",
           "externalGenerator": {
             "enabled": false,
@@ -3886,7 +3886,7 @@
           "id": "3f622f39-dda4-47ca-8259-ba1774e42b1b",
           "ordinal": 1,
           "name": "MIXED: 25 DEP & ARR",
-          "notams": "PILOTS MUST NOT ENTER ON TWY A WITHOUT BEING CLEARED BY ATC. ALL CONVENTIONAL SID AND STAR PROCEDURES ARE SUSPENDED. NON PRNAV AIRCRAFT WILL BE VECTORED.",
+          "notams": "PILOTS MUST NOT ENTER ON TWY A WITHOUT BEING CLEARED BY ATC. ALL CONVENTIONAL SID AND STAR PROCEDURES ARE SUSPENDED. NON PRNAV AIRCRAFT WILL BE VECTORED..",
           "template": "[FACILITY] ATIS information [ID] [TIME]. Expect ILS DME approach runway 25 in use. Transition level [TL], [NOTAMS]. Wind [WIND], [VIS], [PRESENT_WX], [CLOUDS], temperature [TEMP], dew point [DEW], [PRESSURE]. This was [FACILITY] ATIS information [ID].",
           "externalGenerator": {
             "enabled": false,

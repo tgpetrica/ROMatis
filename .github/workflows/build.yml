@@ -68,9 +68,10 @@ jobs:
       - name: Commit build
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
+            UPDATE_SERIAL=$(jq -r '.updateSerial' profiles/ROMatis.json)
             git config user.name "github-actions"
             git config user.email "actions@users.noreply.github.com"
             git add profiles/ROMatis.json
-            git commit -m "build: ROMatis with NOTAMs + serial bump"
+            git commit -m "build: ROMatis with NOTAMs ${UPDATE_SERIAL}"
             git push
           fi

@@ -44,13 +44,26 @@ jobs:
       - name: Bump updateSerial
         shell: bash
         run: |
-          TODAY=$(date +%Y%m%d)
-          TMP=$(mktemp)
-          OLD=$(jq -r '.updateSerial // 0' profiles/ROMatis.json)
-          OLD_DATE=${OLD:0:8}; OLD_CTR=${OLD:8:2}
-          if [[ "$OLD_DATE" == "$TODAY" ]]; then CTR=$(printf "%02d" $((10#$OLD_CTR + 1))); else CTR="01"; fi
+          set -euo pipefail
+          OUT=profiles/ROMatis.json
+          TODAY=$(date -u +%Y%m%d)
+          OLD=$(jq -r '(.updateSerial|tostring)? // "0"' "$OUT")
+          echo "Current updateSerial: $OLD"
+
+          OLD_DATE=${OLD:0:8}
+          OLD_CTR=${OLD:8:2}
+
+          if [[ "$OLD_DATE" == "$TODAY" && "$OLD_CTR" =~ ^[0-9][0-9]$ ]]; then
+            CTR=$(printf "%02d" $((10#$OLD_CTR + 1)))
+          else
+            CTR="01"
+          fi
+
           NEW="${TODAY}${CTR}"
-          jq --argjson v "$NEW" '.updateSerial = $v' profiles/ROMatis.json > "$TMP" && mv "$TMP" profiles/ROMatis.json
+          echo "Next updateSerial:   $NEW"
+          TMP=$(mktemp)
+          jq --arg v "$NEW" '.updateSerial = $v' "$OUT" > "$TMP" && mv "$TMP" "$OUT"
+          jq -r '.updateSerial' "$OUT"
 
       - name: Commit build
         run: |

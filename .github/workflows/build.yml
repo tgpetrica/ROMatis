@@ -16,31 +16,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
             token: ${{ secrets.GITHUB_TOKEN }}
-            
+
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Load NOTAMs into env
-        id: notams
-        shell: bash
-        run: |
-          for f in notams/*.txt; do
-            ICAO=$(basename "$f" .txt)
-            TXT=$(sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' "$f")
-            echo "${ICAO}=${TXT}" >> $GITHUB_OUTPUT
-          done
-
+        
       - name: Inject NOTAM tokens
         shell: bash
         run: |
-          SRC=profiles/ROMatis.base.json
-          OUT=profiles/ROMatis.json
-          cp "$SRC" "$OUT"
-          for f in notams/*.txt; do
-            ICAO=$(basename "$f" .txt)
-            VAL=$(perl -0777 -pe 's/([\/&\\])/\\$1/g; s/\R/\\n/g' "$f")
-            sed -i "s/%%${ICAO}_NOTAMS%%/${VAL}/g" "$OUT"
-          done
+            set -euo pipefail
+            SRC=profiles/ROMatis.base.json
+            OUT=profiles/ROMatis.json
+            cp "$SRC" "$OUT"
+
+            for f in notams/*.txt; do
+                ICAO_RAW=$(basename "$f" .txt)
+                ICAO=$(echo "$ICAO_RAW" | tr '[:lower:]' '[:upper:]')
+                VAL=$(perl -0777 -pe 's/([\/&\\"])/\\$1/g; s/\R/\\n/g' "$f")
+
+                if grep -q "%%${ICAO}_NOTAMS%%" "$OUT"; then
+                    sed -i "s/%%${ICAO}_NOTAMS%%/${VAL}/g" "$OUT"
+                    echo "Injected NOTAMs for ${ICAO}"
+                else
+                    echo "::warning::Token %%${ICAO}_NOTAMS%% not found in ${OUT}"
+                fi
+            done
 
       - name: Bump updateSerial
         shell: bash
